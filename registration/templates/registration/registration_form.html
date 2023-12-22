@@ -1,0 +1,92 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+
+{% block content %}
+<style>
+    /* Container styles */
+    .registration-container {
+        display: flex;
+        justify-content: flex-start; /* Align to the right, change to flex-start or center as needed */
+        align-items: center;
+        height: 100vh;
+        background: #fffefe url('https://www-cdn.eumetsat.int/files/styles/16_9_large/s3/2020-10/ASpot_Register.jpg?h=e52d3e22&itok=4x_yURaN') no-repeat center center;
+        background-size: cover;
+    }
+
+    .registration-form {
+        max-width: 400px; /* Set the maximum width for the form */
+        width: 100%;
+        padding: 20px;
+        margin-left: 20%;
+        background-color: rgba(255, 255, 255, 0.8); /* Set a semi-transparent background for better readability */
+        border-radius: 8px;
+    }
+
+    /* Add Bootstrap styling to the form and error messages */
+    .form-group {
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+    .has-error input,
+    .has-error select {
+        border-color: #d9534f;
+    }
+
+    .error-message {
+        color: #d9534f;
+        margin-top: 5px;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background-color: #d7dadd;
+        color: #151414;
+    }
+
+    /* Form text color on hovering */
+    .registration-form input:hover,
+    .registration-form select:hover {
+        color: #007bff; /* Set the desired text color on hovering */
+    }
+</style>
+
+<div class="registration-container">
+    <form method="post" action="" class="registration-form">
+        {% csrf_token %}
+
+        <!-- Loop through form fields -->
+        {% for field in form %}
+            <div class="form-group {% if field.errors %}has-error{% endif %}">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error-message">
+                        {% for error in field.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
+        <p>Already have an account please <a href="{% url 'auth_login' %}">login</a></p>
+    </form>
+</div>
+{% endblock %}
+
+
+{% comment %}
+**registration/registration_form.html**
+Used to show the form users will fill out to register. By default, has
+the following context:
+
+``form``
+    The registration form. This will be an instance of some subclass
+    of ``django.forms.Form``; consult `Django's forms documentation
+    <http://docs.djangoproject.com/en/dev/topics/forms/>`_ for
+    information on how to display this in a template.
+{% endcomment %}
